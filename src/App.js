@@ -11,10 +11,11 @@ import PixDetails from './components/pix/PixDetails';
 import localStorageUtils from './utils/localStorage.utils';
 
 function App() {
-  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(()=>{
+      const token = localStorageUtils.get();
+      return !!token;
+  });
 
-  const token = localStorageUtils.get();
-  if (token) setIsUserAuthenticated(true);
 
   const changeUserAuthStatus = (status) => {
     setIsUserAuthenticated(status);
