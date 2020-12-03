@@ -16,9 +16,14 @@ code {
     width: 25vw;
     border: black 1px solid; 
     margin: 10px;
-    height: 30vh;
+    height: 40vh;
 }
 
 .img-bank {
+  width: 60px;
+  align-items: center;
+}
+
+.bottons-nav {
   width: 60px;
 }
