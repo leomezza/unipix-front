@@ -65,6 +65,9 @@ const Signup = (props) => {
   const handleSubmitMethod = async (formValues, helperMethods) => {
     try {
       console.log(formValues);
+      delete formValues.confirmPassword;
+      console.log(formValues);
+
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/auth/public/signup`,
         formValues

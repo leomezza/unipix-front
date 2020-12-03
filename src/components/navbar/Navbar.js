@@ -1,43 +1,39 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Navbar, Nav } from 'react-bootstrap';
+
+import logo from '../../UniPix-logo.png';
 
 const navbar = ({ isUserAuth, logoutUser }) => {
   return (
-    <nav className="nav-style">
-      <ul>
+    <Navbar bg="primary" variant="dark">
+      <Navbar.Brand href="/">
+        <img
+          alt="UniPix Logo"
+          src={logo}
+          width="30"
+          height="30"
+          className="d-inline-block align-top"
+        />{' '}
+        UniPix
+      </Navbar.Brand>
+
+      <Nav className="mr-auto">
         {isUserAuth ? (
           <>
-            <li>
-              <Link to="/pix" style={{ textDecoration: 'none' }}>
-                Pix
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/"
-                onClick={logoutUser}
-                style={{ textDecoration: 'none' }}
-              >
-                Logout
-              </Link>
-            </li>
+            <Nav.Link href="/pix">Minhas chaves</Nav.Link>
+            <Nav.Link href="/pix">Outras chaves</Nav.Link>
+            <Nav.Link href="/" onClick={logoutUser}>
+              Sair
+            </Nav.Link>
           </>
         ) : (
           <>
-            <li>
-              <Link to="/" style={{ textDecoration: 'none' }}>
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/signup" style={{ textDecoration: 'none' }}>
-                Signup
-              </Link>
-            </li>
+            <Nav.Link href="/">Login</Nav.Link>
+            <Nav.Link href="/signup">Cadastrar</Nav.Link>
           </>
         )}
-      </ul>
-    </nav>
+      </Nav>
+    </Navbar>
   );
 };
 
