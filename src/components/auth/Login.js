@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import * as yup from 'yup';
 
@@ -19,6 +19,12 @@ const Login = (props) => {
     email: '',
     password: '',
   }
+
+  useEffect(()=>{
+      if (localStorageUtils.get()){
+        redirectToLoggedArea();
+      }
+  },[])
 
   const redirectToLoggedArea = () => {
     props.history.push('/pix');

@@ -65,7 +65,7 @@ class PixDetails extends Component {
         <br />
         <br />
         <br />
-        <Link to={'/pix'}>Back to pix</Link>
+        <Link to={'/pix'}>Voltar Para Meus Pi</Link>
       </div>
     );
   }

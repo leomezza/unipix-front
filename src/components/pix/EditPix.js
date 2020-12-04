@@ -3,19 +3,31 @@ import React, { Component } from 'react';
 import apiServices from '../../services/api.service';
 
 class EditPix extends Component {
-  state = {
-    title: this.props.thePix.title,
-    description: this.props.thePix.description,
-    id: this.props.thePix._id,
-  };
+  state = {};
 
+  componentDidMount() {
+    this.getSinglePix();
+  }
+
+  getSinglePix = async () => {
+    try {
+      const { params } = this.props.match;
+
+      const pix = await apiServices.getOnePixById(params.id);
+
+      this.setState(pix);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   handleFormSubmit = async (event) => {
     try {
       event.preventDefault();
 
-      const { title, description, id } = this.state;
+      const { key, agency, id } = this.state;
 
-      await apiServices.editPixById(id, { title, description });
+      await apiServices.editPixById(id, { key, agency });
 
       this.props.history.push('/pix');
     } catch (error) {
@@ -36,17 +48,17 @@ class EditPix extends Component {
         <hr />
         <h3>Edit form</h3>
         <form onSubmit={this.handleFormSubmit}>
-          <label>Title:</label>
+          <label>Chave:</label>
           <input
             type="text"
             name="title"
-            value={this.state.title}
+            value={this.state.key}
             onChange={(e) => this.handleChange(e)}
           />
-          <label>Description:</label>
+          <label>Agencia:</label>
           <textarea
             name="description"
-            value={this.state.description}
+            value={this.state.agency}
             onChange={(e) => this.handleChange(e)}
           />
 

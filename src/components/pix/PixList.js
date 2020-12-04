@@ -10,6 +10,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
+import EditPix from './EditPix';
 
 class PixList extends Component {
   state = {
@@ -20,7 +21,7 @@ class PixList extends Component {
   getAllPix = async () => {
     try {
       const pix = await apiServices.getMyPix();
-      console.log(pix);
+      //console.log(pix);
 
       this.setState({ listOfPix: pix });
     } catch (error) {
@@ -42,11 +43,15 @@ class PixList extends Component {
 
           return (
             <div className='pix-container' key={pix._id}>
-              <img className='img-bank' src={pix.bank.imgBank} rel='logo' />
-              <Link to={`/pix/${pix._id}`}>
+              <OverlayTrigger key='banco' placement='bottom' overlay={<Tooltip id={`tooltip-banco`}>{pix.bank.name}</Tooltip>}>
+                {/* <Image variant="secondary" className="bottons-nav" src="https://www.freeiconspng.com/uploads/copy-icon-17.jpg" thumbnail /> */}
+                <img className='img-bank' src={pix.bank.imgBank} rel='banco' />
+              </OverlayTrigger>         
+
+              {/* <Link to={`/pix/${pix._id}`}> */}
                 <h3>Chave: {pix.key}</h3>
-              </Link>
-              <h2>Banco: {pix.bank.name}</h2>
+              {/* </Link> */}
+              {/* <h2>Banco: {pix.bank.name}</h2> */}
               <h2>Agência: {pix.agency}</h2>
               <h2>Conta: {pix.account}</h2>
               <h2>Observação: {pix.note}</h2>
@@ -64,10 +69,12 @@ class PixList extends Component {
                   </OverlayTrigger>         
                 </span>
               </CopyToClipboard>
+              <Link to={`/pix/${pix._id}`}>
+                <OverlayTrigger key='editar' placement='top' overlay={<Tooltip id={`tooltip-editar`}>Editar</Tooltip>}>
+                  <Image className="bottons-nav" src="https://www.freeiconspng.com/uploads/edit-notes-icons-21.png" thumbnail />
+                </OverlayTrigger>
+              </Link>
 
-              <OverlayTrigger key='editar' placement='top' overlay={<Tooltip id={`tooltip-editar`}>Editar</Tooltip>}>
-                <Image className="bottons-nav" src="https://www.freeiconspng.com/uploads/edit-notes-icons-21.png" thumbnail />
-              </OverlayTrigger>
               <OverlayTrigger key='excluir' placement='top' overlay={<Tooltip id={`tooltip-excluir`}>Excluir</Tooltip>}>
                 <Image className="bottons-nav" src="https://www.freeiconspng.com/uploads/trash-can-icon-29.png" thumbnail />
               </OverlayTrigger>
