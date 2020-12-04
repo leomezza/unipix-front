@@ -6,7 +6,8 @@ import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import Navbar from './components/navbar/Navbar';
 import PixList from './components/pix/PixList';
-import PixDetails from './components/pix/PixDetails';
+// import PixDetails from './components/pix/PixDetails';
+import EditPix from './components/pix/EditPix';
 
 import localStorageUtils from './utils/localStorage.utils';
 
@@ -49,7 +50,7 @@ function App() {
           <Redirect to="/" />
         )}
         {isUserAuthenticated ? (
-          <Route exact path="/pix/:id" component={PixDetails} />
+          <Route exact path="/pix/:id" component={EditPix} />
         ) : (
           <Redirect to="/" />
         )}

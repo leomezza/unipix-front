@@ -26,4 +26,5 @@ code {
 
 .bottons-nav {
   width: 60px;
+  cursor: pointer;
 }
