@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
-import Navbar from './components/navbar/Navbar';
+import NavigationBar from './components/navbar/Navbar';
 import PixList from './components/pix/PixList';
 // import PixDetails from './components/pix/PixDetails';
 import EditPix from './components/pix/EditPix';
@@ -12,7 +12,6 @@ import EditPix from './components/pix/EditPix';
 import localStorageUtils from './utils/localStorage.utils';
 
 function App() {
-
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(() => {
     const token = localStorageUtils.get();
     return !!token;
@@ -30,7 +29,7 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar isUserAuth={isUserAuthenticated} logoutUser={logoutUser} />
+      <NavigationBar isUserAuth={isUserAuthenticated} logoutUser={logoutUser} />
 
       <Switch>
         {/* Rotas Publicas */}

@@ -46,6 +46,16 @@ class ApiServices {
     await this.api.put(`${process.env.REACT_APP_API_BASE_URL}/pix/private/update/${id}`, data);
   }
 
+  getUserInfo = async () => {
+    const { data } = await this.api.get(`${process.env.REACT_APP_API_BASE_URL}/user/private/info`);
+
+    return data;
+  }
+
+  editUserInfo = async data => {
+    await this.api.put(`${process.env.REACT_APP_API_BASE_URL}/user/private/update`, data);
+  }
+
 }
 
 export default new ApiServices();
