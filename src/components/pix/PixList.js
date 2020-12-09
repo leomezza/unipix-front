@@ -10,7 +10,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-import EditPix from './EditPix';
+// import EditPix from './EditPix';
 
 class PixList extends Component {
   state = {
