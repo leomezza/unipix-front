@@ -16,6 +16,11 @@ class ApiServices {
     );
   }
 
+  getAllBanks = async() => {
+    const { data } = await this.api.get(`${process.env.REACT_APP_API_BASE_URL}/bank/private/list`);
+    return data;
+  }
+
   getMyPix = async () => {
     const { data } = await this.api.get(`${process.env.REACT_APP_API_BASE_URL}/pix/private/list?type=1`);
 
