@@ -5,12 +5,12 @@ import apiServices from '../../services/api.service';
 class EditPix extends Component {
   constructor(props) {
     super(props)
-    this.state = {bank:[], pix:{}, selectItem: 0};
-    this.handleSelectItem = this.handleSelectItem.bind(this);
+    this.state = {bank:[], pix:{}, SelectedBank: 0};
+    this.handleSelectedBank = this.handleSelectedBank.bind(this);
   }
 
-  handleSelectItem(e) {
-  	this.setState({selectItem: e.target.value});
+  handleSelectedBank(e) {
+  	this.setState({SelectedBank: e.target.value});
   };
 
   componentDidMount() {
@@ -38,6 +38,8 @@ class EditPix extends Component {
       const pix = await apiServices.getOnePixById(params.id);
 
       this.setState({pix: pix});
+      this.setState({SelectedBank: pix.bank._id});
+      console.log(this.state.SelectedBank);
     } catch (error) {
       console.log(error);
     }
@@ -47,9 +49,10 @@ class EditPix extends Component {
     try {
       event.preventDefault();
 
-      const { key, agency, id } = this.state;
+      const { key, agency, account, note, _id } = this.state.pix ;
+      const { SelectedBank } = this.state ;
 
-      await apiServices.editPixById(id, { key, agency });
+      await apiServices.editPixById(_id, { key, agency, account, note, bank: SelectedBank });
 
       this.props.history.push('/pix');
     } catch (error) {
@@ -60,11 +63,11 @@ class EditPix extends Component {
   handleChange = (event) => {
     const { name, value } = event.target;
 
-    this.setState({ [name]: value });
+    this.setState({ pix: { ...this.state.pix, [name]: value }});
   };
 
   render() {
-    console.log(this.state.bank);
+    //console.log(this.state.bank);
     return (
       <div  className='pix-container'>
         <hr />
@@ -79,16 +82,11 @@ class EditPix extends Component {
           />
           <br />
           <label>Banco:</label>
-          <select value={this.state.selectItem} onChange={this.handleSelectItem}>
+          <select value={this.state.SelectedBank} onChange={this.handleSelectedBank}>
           {this.state.bank.map((item, index) => (
-          	<option key={index} value={item.id}>{item.name}</option>
+          	<option key={index} value={item._id}>{item.name}</option>
           ))}
-          </select>          
-          <textarea
-            name="bank"
-            value={this.state.pix.bank}
-            onChange={(e) => this.handleChange(e)}
-          />     
+          </select>            
           <br />     
           <label>Agencia:</label>
           <textarea
