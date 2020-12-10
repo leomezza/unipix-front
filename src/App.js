@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
-import NavigationBar from './components/navbar/Navbar';
+import NavigationBar from './components/navigationbar/NavigationBar';
 import PixList from './components/pix/PixList';
 // import PixDetails from './components/pix/PixDetails';
 import EditPix from './components/pix/EditPix';
