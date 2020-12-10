@@ -17,6 +17,7 @@ class PixList extends Component {
     listOfPix: [],
     pix: {},
   };
+ 
 
   getAllPix = async () => {
     try {
