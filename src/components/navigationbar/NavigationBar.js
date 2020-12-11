@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 
 import logo from '../../UniPix-logo.png';
 
+import AddPix from '../pix/AddPix';
 import apiServices from '../../services/api.service';
 
 const userSchema = yup.object({
@@ -37,11 +38,16 @@ const userSchema = yup.object({
     .required('Campo Obrigatório'),
 });
 
-const NavigationBar = ({ isUserAuth, logoutUser }) => {
+const NavigationBar = ({
+  isUserAuth,
+  logoutUser,
+  isAddPixShown,
+  showAddPix,
+}) => {
   const [userInfo, setUserInfo] = useState({});
-  const [modalShow, setModalShow] = React.useState(false);
+  const [userModalShow, setUserModalShow] = React.useState(false);
 
-  const handleClose = () => setModalShow(false);
+  const handleClose = () => setUserModalShow(false);
 
   useEffect(() => {
     if (isUserAuth) {
@@ -62,7 +68,7 @@ const NavigationBar = ({ isUserAuth, logoutUser }) => {
       await apiServices.editUserInfo(formValues);
       setUserInfo(await apiServices.getUserInfo());
 
-      setModalShow(false);
+      setUserModalShow(false);
     } catch (error) {
       if (error.response.data && error.response.data.type === 'Auth-Signup') {
         helperMethods.setFieldError('email', error.response.data.message);
@@ -89,10 +95,14 @@ const NavigationBar = ({ isUserAuth, logoutUser }) => {
             <>
               <Nav.Link href="/pix">Minhas chaves</Nav.Link>
               <Nav.Link href="/pix">Outras chaves</Nav.Link>
-              <Nav.Link className="mx-auto" href="/newpix">
+              <Button className="mx-auto" onClick={() => showAddPix(true)}>
                 Nova chave
-              </Nav.Link>
-              <Button className="ml-auto" onClick={() => setModalShow(true)}>
+              </Button>
+              <AddPix show={isAddPixShown} onHide={() => showAddPix(false)} />
+              <Button
+                className="ml-auto"
+                onClick={() => setUserModalShow(true)}
+              >
                 {userInfo.fullName && userInfo.fullName.split(' ')[0]}{' '}
                 <img
                   alt="Avatar"
@@ -119,7 +129,7 @@ const NavigationBar = ({ isUserAuth, logoutUser }) => {
       </Navbar>
 
       <Modal
-        show={modalShow}
+        show={userModalShow}
         onHide={handleClose}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -285,7 +295,7 @@ const NavigationBar = ({ isUserAuth, logoutUser }) => {
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit">Atualizar Conta</Button>
-                <Button onClick={() => setModalShow(false)}>Fechar</Button>
+                <Button onClick={() => setUserModalShow(false)}>Fechar</Button>
               </Modal.Footer>
             </Form>
           )}

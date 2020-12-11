@@ -17,6 +17,8 @@ function App() {
     return !!token;
   });
 
+  const [addPixModalShow, setAddPixModalShow] = useState(false);
+
   const changeUserAuthStatus = (status) => {
     setIsUserAuthenticated(status);
   };
@@ -29,7 +31,12 @@ function App() {
 
   return (
     <div className="App">
-      <NavigationBar isUserAuth={isUserAuthenticated} logoutUser={logoutUser} />
+      <NavigationBar
+        isUserAuth={isUserAuthenticated}
+        logoutUser={logoutUser}
+        isAddPixShown={addPixModalShow}
+        showAddPix={setAddPixModalShow}
+      />
 
       <Switch>
         {/* Rotas Publicas */}
