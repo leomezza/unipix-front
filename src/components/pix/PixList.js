@@ -10,6 +10,11 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+// import Confirm from 'react-confirm-bootstrap';
+// import { Button, Confirm } from 'semantic-ui-react';
+
 // import EditPix from './EditPix';
 
 class PixList extends Component {
@@ -17,7 +22,38 @@ class PixList extends Component {
     listOfPix: [],
     pix: {},
   };
+
+  deletePix = async (chavePix) => {
+    try {
+      // const { params } = this.props.match;
+      if (chavePix){
+        console.log(chavePix);
+        await apiServices.deletePixById(chavePix);
+  
+        //this.props.history.push('/pix');    
+        this.getAllPix();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
  
+  submit = (chavePix) => {
+    confirmAlert({
+      title: 'Exclusão',
+      message: 'Confirma a exclusão da chave selecionada?',
+      buttons: [
+        {
+          label: 'Sim',
+          onClick: () => this.deletePix(chavePix)
+        },
+        {
+          label: 'Não',
+          onClick: () => this.deletePix('')
+        }
+      ]
+    });
+  };
 
   getAllPix = async () => {
     try {
@@ -76,8 +112,8 @@ class PixList extends Component {
                 </OverlayTrigger>
               </Link>
 
-              <OverlayTrigger key='excluir' placement='top' overlay={<Tooltip id={`tooltip-excluir`}>Excluir</Tooltip>}>
-                <Image className="bottons-nav" src="https://www.freeiconspng.com/uploads/trash-can-icon-29.png" thumbnail />
+              <OverlayTrigger key='excluir' placement='top' overlay={<Tooltip id={`tooltip-excluir`}>Excluir</Tooltip>}> 
+                <Image className="bottons-nav" onClick={()=>this.submit(pix._id)} src="https://www.freeiconspng.com/uploads/trash-can-icon-29.png" thumbnail />
               </OverlayTrigger>
               <OverlayTrigger key='qrcode' placement='top' overlay={<Tooltip id={`tooltip-qrcode`}>Gerar QR Code</Tooltip>}>
                 <Image className="bottons-nav" src="https://icon-library.com/images/qr-icon/qr-icon-19.jpg" thumbnail />
