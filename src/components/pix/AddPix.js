@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Col } from 'react-bootstrap';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
 import apiServices from '../../services/api.service';
+import { Redirect } from 'react-router-dom';
 
 const pixSchema = yup.object({
   pixType: yup
@@ -38,16 +39,36 @@ const AddPix = (props) => {
     name3P: '',
   };
 
+  const [listBank, setListBank] = useState([]);
+  const [redAdress, setRedAdress] = useState('');
+
+  const getListBank = async () => {
+    try {
+      const bank = await apiServices.getAllBanks();
+      setListBank(bank);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(()=>{
+    if (listBank.length < 1) getListBank();
+  },[])
+
   let isNewPixSuccessful = false;
 
-  if (props.listBank.length < 1)
-    props.loadBankList().then(console.log(props.listBank));
+  listBank.length > 0 ? console.log(listBank) : console.log('não carregou');
+  
+  console.log(props);
 
   const handleSubmitMethod = async (formValues, helperMethods) => {
     try {
       await apiServices.createPix(formValues);
       isNewPixSuccessful = true;
       props.onHide();
+      setRedAdress(`/pix/${formValues.ownertype}`);
+      props.getListPix(formValues.ownertype);
+
     } catch (error) {
       if (error.response.data && error.response.data.type === 'Auth-Signup') {
         helperMethods.setFieldError('email', error.response.data.message);
@@ -55,7 +76,7 @@ const AddPix = (props) => {
     }
   };
 
-  return (
+  return redAdress ? <Redirect to={redAdress}/> : (
     <Modal
       {...props}
       size="lg"
@@ -68,221 +89,215 @@ const AddPix = (props) => {
           Nova Chave
         </Modal.Title>
       </Modal.Header>
-      <Formik
-        initialValues={initialState}
-        onSubmit={handleSubmitMethod}
-        validationSchema={pixSchema}
-      >
-        {({
-          handleSubmit,
-          handleChange,
-          handleBlur,
-          values,
-          touched,
-          errors,
-        }) => (
-          <Form noValidate onSubmit={handleSubmit} className="m-4">
-            <Modal.Body>
-              <Form.Group as={Col} md="8" controlId="validationFormik01">
-                <Form.Label className="mr-2"></Form.Label>
-                <Form.Check
-                  checked={values.ownertype === '1'}
-                  inline
-                  type="radio"
-                  id="1"
-                  name="ownertype"
-                  value="1"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="Minha chave"
-                />
-                <Form.Check
-                  checked={values.ownertype === '2'}
-                  inline
-                  type="radio"
-                  id="2"
-                  name="ownertype"
-                  value="2"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="Chave de outra pessoa"
-                />
-              </Form.Group>
-
-              {values.ownertype === '2' && (
-                <Form.Group as={Col} md="6" controlId="validationFormik08">
-                  <Form.Label>Nome da outra pessoa</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name3P"
-                    value={values.name3P}
+      {listBank.length > 0 && (
+        <Formik
+          initialValues={initialState}
+          onSubmit={handleSubmitMethod}
+          validationSchema={pixSchema}
+        >
+          {({
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            values,
+            touched,
+            errors,
+          }) => (
+            <Form noValidate onSubmit={handleSubmit} className="m-4">
+              <Modal.Body>
+                <Form.Group as={Col} md="8" controlId="validationFormik01">
+                  <Form.Label className="mr-2"></Form.Label>
+                  <Form.Check
+                    checked={values.ownertype === '1'}
+                    inline
+                    type="radio"
+                    id="1"
+                    name="ownertype"
+                    value="1"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    isValid={touched.name3P && !errors.name3P}
-                    isInvalid={touched.name3P && errors.name3P}
+                    label="Minha chave"
+                  />
+                  <Form.Check
+                    checked={values.ownertype === '2'}
+                    inline
+                    type="radio"
+                    id="2"
+                    name="ownertype"
+                    value="2"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    label="Chave de outra pessoa"
+                  />
+                </Form.Group>
+
+                {values.ownertype === '2' && (
+                  <Form.Group as={Col} md="6" controlId="validationFormik08">
+                    <Form.Label>Nome da outra pessoa</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="name3P"
+                      value={values.name3P}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      isValid={touched.name3P && !errors.name3P}
+                      isInvalid={touched.name3P && errors.name3P}
+                    />
+                    <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      {errors.name3P}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                )}
+
+                <Form.Group as={Col} md="8" controlId="validationFormik02">
+                  <Form.Label className="mr-2">Tipo:</Form.Label>
+                  <Form.Check
+                    checked={values.pixType === 'CPF'}
+                    inline
+                    type="radio"
+                    id="CPF"
+                    name="pixType"
+                    value="CPF"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    label="CPF"
+                  />
+                  <Form.Check
+                    checked={values.pixType === 'CNPJ'}
+                    inline
+                    type="radio"
+                    id="CNPJ"
+                    name="pixType"
+                    value="CNPJ"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    label="CNPJ"
+                  />
+                  <Form.Check
+                    checked={values.pixType === 'EMail'}
+                    inline
+                    type="radio"
+                    id="EMail"
+                    name="pixType"
+                    value="EMail"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    label="e-mail"
+                  />
+                  <Form.Check
+                    checked={values.pixType === 'Cell'}
+                    inline
+                    type="radio"
+                    id="Cell"
+                    name="pixType"
+                    value="Cell"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    label="Celular"
+                  />
+                  <Form.Check
+                    checked={values.pixType === 'Random'}
+                    inline
+                    type="radio"
+                    id="Random"
+                    name="pixType"
+                    value="Random"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    label="Aleatória"
+                  />
+                </Form.Group>
+
+                <Form.Group as={Col} md="6" controlId="validationFormik03">
+                  <Form.Label>Chave</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="key"
+                    value={values.key}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isValid={touched.key && !errors.key}
+                    isInvalid={touched.key && errors.key}
                   />
                   <Form.Control.Feedback>Okay!</Form.Control.Feedback>
                   <Form.Control.Feedback type="invalid">
-                    {errors.name3P}
+                    {errors.key}
                   </Form.Control.Feedback>
                 </Form.Group>
-              )}
 
-              <Form.Group as={Col} md="8" controlId="validationFormik02">
-                <Form.Label className="mr-2">Tipo:</Form.Label>
-                <Form.Check
-                  checked={values.pixType === 'CPF'}
-                  inline
-                  type="radio"
-                  id="CPF"
-                  name="pixType"
-                  value="CPF"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="CPF"
-                />
-                <Form.Check
-                  checked={values.pixType === 'CNPJ'}
-                  inline
-                  type="radio"
-                  id="CNPJ"
-                  name="pixType"
-                  value="CNPJ"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="CNPJ"
-                />
-                <Form.Check
-                  checked={values.pixType === 'EMail'}
-                  inline
-                  type="radio"
-                  id="EMail"
-                  name="pixType"
-                  value="EMail"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="e-mail"
-                />
-                <Form.Check
-                  checked={values.pixType === 'Cell'}
-                  inline
-                  type="radio"
-                  id="Cell"
-                  name="pixType"
-                  value="Cell"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="Celular"
-                />
-                <Form.Check
-                  checked={values.pixType === 'Random'}
-                  inline
-                  type="radio"
-                  id="Random"
-                  name="pixType"
-                  value="Random"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="Aleatória"
-                />
-              </Form.Group>
+                <Form.Group as={Col} md="6" controlId="validationFormik04">
+                  <Form.Label>Banco</Form.Label>
+                  <Form.Control as="select" custom onChange={handleChange} onBlur={handleBlur} name="bank">
+                    {listBank.map((item, index) => (
+                      <option key={index} value={item._id}>{item.name}</option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
 
-              <Form.Group as={Col} md="6" controlId="validationFormik03">
-                <Form.Label>Chave</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="key"
-                  value={values.key}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isValid={touched.key && !errors.key}
-                  isInvalid={touched.key && errors.key}
-                />
-                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  {errors.key}
-                </Form.Control.Feedback>
-              </Form.Group>
+                <Form.Group as={Col} md="6" controlId="validationFormik05">
+                  <Form.Label>Agência</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="agency"
+                    value={values.agency}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isValid={touched.agency && !errors.agency}
+                    isInvalid={touched.agency && errors.agency}
+                  />
+                  <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.agency}
+                  </Form.Control.Feedback>
+                </Form.Group>
 
-              <Form.Group as={Col} md="6" controlId="validationFormik04">
-                <Form.Label>Banco</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="bank"
-                  value={values.bank}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isValid={touched.bank && !errors.bank}
-                  isInvalid={touched.bank && errors.bank}
-                />
-                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  {errors.bank}
-                </Form.Control.Feedback>
-              </Form.Group>
+                <Form.Group as={Col} md="6" controlId="validationFormik06">
+                  <Form.Label>Conta</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="account"
+                    value={values.account}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isValid={touched.account && !errors.account}
+                    isInvalid={touched.account && errors.account}
+                  />
+                  <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.account}
+                  </Form.Control.Feedback>
+                </Form.Group>
 
-              <Form.Group as={Col} md="6" controlId="validationFormik05">
-                <Form.Label>Agência</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="agency"
-                  value={values.agency}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isValid={touched.agency && !errors.agency}
-                  isInvalid={touched.agency && errors.agency}
-                />
-                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  {errors.agency}
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group as={Col} md="6" controlId="validationFormik06">
-                <Form.Label>Conta</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="account"
-                  value={values.account}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isValid={touched.account && !errors.account}
-                  isInvalid={touched.account && errors.account}
-                />
-                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  {errors.account}
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group as={Col} md="6" controlId="validationFormik07">
-                <Form.Label>Observação</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="note"
-                  value={values.note}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isValid={touched.note && !errors.note}
-                  isInvalid={touched.note && errors.note}
-                />
-                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-                <Form.Control.Feedback type="invalid">
-                  {errors.note}
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="success" className="mr-auto" type="submit">
-                Criar chave
-              </Button>
-              <Button variant="danger" onClick={props.onHide}>
-                Fechar
-              </Button>
-            </Modal.Footer>
-          </Form>
-        )}
-      </Formik>
+                <Form.Group as={Col} md="6" controlId="validationFormik07">
+                  <Form.Label>Observação</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="note"
+                    value={values.note}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isValid={touched.note && !errors.note}
+                    isInvalid={touched.note && errors.note}
+                  />
+                  <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.note}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="success" className="mr-auto" type="submit">
+                  Criar chave
+                </Button>
+                <Button variant="danger" onClick={props.onHide}>
+                  Fechar
+                </Button>
+              </Modal.Footer>
+            </Form>
+          )}
+        </Formik>
+      )}
     </Modal>
   );
 };

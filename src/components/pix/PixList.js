@@ -97,6 +97,7 @@ class PixList extends Component {
   render() {
     return (
       <div>
+        <h1>{this.props.match.params.id ==='1' ? 'Minhas Chaves' : 'Chaves de Terceiros' }</h1>
         {this.props.listPix.map((pix, index) => {
           this.state.copied = {[index]: false };
   
