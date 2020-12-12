@@ -93,8 +93,8 @@ const NavigationBar = ({
         <Nav className="w-100">
           {isUserAuth ? (
             <>
-              <Nav.Link href="/pix">Minhas chaves</Nav.Link>
-              <Nav.Link href="/pix">Outras chaves</Nav.Link>
+              <Nav.Link href="/pix/1">Minhas chaves</Nav.Link>
+              <Nav.Link href="/pix/2">Outras chaves</Nav.Link>
               <Button className="mx-auto" onClick={() => showAddPix(true)}>
                 Nova chave
               </Button>

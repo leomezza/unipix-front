@@ -10,6 +10,7 @@ import PixList from './components/pix/PixList';
 import EditPix from './components/pix/EditPix';
 
 import localStorageUtils from './utils/localStorage.utils';
+import apiServices from '../src/services/api.service';
 
 function App() {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(() => {
@@ -18,7 +19,27 @@ function App() {
   });
 
   const [addPixModalShow, setAddPixModalShow] = useState(false);
+  const [listPix, setListPix] = useState([]);
 
+  const getListPix = async (type) =>{
+    try {
+      let pix = [];
+
+      if (type==='1') {
+        pix = await apiServices.getMyPix();
+      }else if (type==='2') {
+        pix = await apiServices.get3PPix();
+      };
+      //console.log(pix);
+      setListPix(pix);
+      //console.log(pix);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //console.log(listPix);
+  
   const changeUserAuthStatus = (status) => {
     setIsUserAuthenticated(status);
   };
@@ -51,7 +72,7 @@ function App() {
 
         {/* Rotas Privadas */}
         {isUserAuthenticated ? (
-          <Route exact path="/pix" component={PixList} />
+          <Route exact path="/pix/:id" render={(props) => <PixList {...props} getListPix={getListPix} listPix={listPix}/>}  />
         ) : (
           <Redirect to="/" />
         )}

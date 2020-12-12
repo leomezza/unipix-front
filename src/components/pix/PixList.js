@@ -56,14 +56,17 @@ class PixList extends Component {
   };
 
   getAllPix = async () => {
-    try {
-      const pix = await apiServices.getMyPix();
-      //console.log(pix);
+    // try {
+    //   const pix = await apiServices.getMyPix();
+    //   //console.log(pix);
 
-      this.setState({ listOfPix: pix });
-    } catch (error) {
-      console.log(error);
-    }
+    //   this.setState({ listOfPix: pix });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    const { params } = this.props.match;
+    
+    this.props.getListPix(params.id);
   };
 
   componentDidMount() {
@@ -73,7 +76,7 @@ class PixList extends Component {
   render() {
     return (
       <div>
-        {this.state.listOfPix.map((pix, index) => {
+        {this.props.listPix.map((pix, index) => {
           this.state.copied = {[index]: false };
   
           let pixCopy = JSON.parse(JSON.stringify(this.state.pix))
