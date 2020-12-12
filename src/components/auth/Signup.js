@@ -41,6 +41,13 @@ const userSchema = yup.object({
     .min(5, 'Mínimo de 5 caracteres')
     .max(16, 'Máximo de 16 caracteres')
     .required('Campo Obrigatório'),
+  cep: yup
+    .string()
+    .min(8, 'Deve conter 8 números')
+    .max(8, 'Deve conter 8 números'),
+  city: yup
+    .string()
+    .max(100, 'Máximo de 100 caracteres'),
 });
 
 const Signup = (props) => {
@@ -54,6 +61,8 @@ const Signup = (props) => {
     email: '',
     docNumber: '',
     tel: '',
+    cep: '',
+    city: '',
   };
 
   const redirectToLogin = () => {
@@ -65,6 +74,7 @@ const Signup = (props) => {
   const handleSubmitMethod = async (formValues, helperMethods) => {
     try {
       delete formValues.confirmPassword;
+      formValues.cep && delete formValues.cep;
 
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/auth/public/signup`,
@@ -78,6 +88,17 @@ const Signup = (props) => {
       if (error.response.data && error.response.data.type === 'Auth-Signup') {
         helperMethods.setFieldError('email', error.response.data.message);
       }
+    }
+  };
+
+  const cepToCity = async (cep, setFieldValue) => {
+    try {
+      const { data: { localidade } } = await axios.get(
+        `https://viacep.com.br/ws/${cep}/json/`);
+
+      setFieldValue("city", localidade);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -101,150 +122,186 @@ const Signup = (props) => {
           values,
           touched,
           errors,
+          setFieldValue,
         }) => (
-          <Form noValidate onSubmit={handleSubmit} className="m-4">
-            <Form.Group as={Col} md="4" controlId="validationFormik01">
-              <Form.Label className="mr-2">Tipo:</Form.Label>
-              <Form.Check
-                checked={values.type === 'A'}
-                inline
-                type="radio"
-                id="A"
-                name="type"
-                value="A"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                label="Pessoa Física"
+            <Form noValidate onSubmit={handleSubmit} className="m-4">
+              <Form.Group as={Col} md="6" controlId="validationFormik01">
+                <Form.Label className="mr-2">Tipo:</Form.Label>
+                <Form.Check
+                  checked={values.type === 'A'}
+                  inline
+                  type="radio"
+                  id="A"
+                  name="type"
+                  value="A"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  label="Pessoa Física"
                 // isValid={touched.type && !errors.type}
                 // isInvalid={touched.type && errors.type}
-              />
+                />
 
-              <Form.Check
-                checked={values.type === 'B'}
-                inline
-                type="radio"
-                id="B"
-                name="type"
-                value="B"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                label="Pessoa Jurídica"
+                <Form.Check
+                  checked={values.type === 'B'}
+                  inline
+                  type="radio"
+                  id="B"
+                  name="type"
+                  value="B"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  label="Pessoa Jurídica"
                 // isValid={touched.type && !errors.type}
                 // isInvalid={touched.type && errors.type}
-              />
-              {/* <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                />
+                {/* <Form.Control.Feedback>Okay!</Form.Control.Feedback>
               <Form.Control.Feedback type="invalid">
                 {errors.type}
               </Form.Control.Feedback> */}
-            </Form.Group>
+              </Form.Group>
 
-            <Form.Group as={Col} md="4" controlId="validationFormik02">
-              <Form.Label>Nome completo</Form.Label>
-              <Form.Control
-                type="text"
-                name="fullName"
-                value={values.fullName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                isValid={touched.fullName && !errors.fullName}
-                isInvalid={touched.fullName && errors.fullName}
-              />
-              <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                {errors.fullName}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationFormik02">
+                <Form.Label>Nome completo</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="fullName"
+                  value={values.fullName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isValid={touched.fullName && !errors.fullName}
+                  isInvalid={touched.fullName && errors.fullName}
+                />
+                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.fullName}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group as={Col} md="4" controlId="validationFormik03">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="text"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                isValid={touched.email && !errors.email}
-                isInvalid={touched.email && errors.email}
-              />
-              <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationFormik03">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isValid={touched.email && !errors.email}
+                  isInvalid={touched.email && errors.email}
+                />
+                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group as={Col} md="4" controlId="validationFormik04">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                isValid={touched.password && !errors.password}
-                isInvalid={touched.password && errors.password}
-              />
-              <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                {errors.password}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationFormik04">
+                <Form.Label>Senha</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isValid={touched.password && !errors.password}
+                  isInvalid={touched.password && errors.password}
+                />
+                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group as={Col} md="4" controlId="validationFormik05">
-              <Form.Label>Confirmação de Senha</Form.Label>
-              <Form.Control
-                type="password"
-                name="confirmPassword"
-                value={values.confirmPassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                isValid={touched.confirmPassword && !errors.confirmPassword}
-                isInvalid={touched.confirmPassword && errors.confirmPassword}
-              />
-              <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                {errors.confirmPassword}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationFormik05">
+                <Form.Label>Confirmação de Senha</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="confirmPassword"
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isValid={touched.confirmPassword && !errors.confirmPassword}
+                  isInvalid={touched.confirmPassword && errors.confirmPassword}
+                />
+                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.confirmPassword}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group as={Col} md="4" controlId="validationFormik06">
-              <Form.Label>
-                Número do {values.type === 'A' ? 'CPF' : 'CNPJ'}
-              </Form.Label>
-              <Form.Control
-                type="text"
-                name="docNumber"
-                value={values.docNumber}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                isValid={touched.docNumber && !errors.docNumber}
-                isInvalid={touched.docNumber && errors.docNumber}
-              />
-              <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                {errors.docNumber}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationFormik06">
+                <Form.Label>
+                  Número do {values.type === 'A' ? 'CPF' : 'CNPJ'}
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="docNumber"
+                  value={values.docNumber}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isValid={touched.docNumber && !errors.docNumber}
+                  isInvalid={touched.docNumber && errors.docNumber}
+                />
+                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.docNumber}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group as={Col} md="4" controlId="validationFormik07">
-              <Form.Label>Telefone</Form.Label>
-              <Form.Control
-                type="text"
-                name="tel"
-                value={values.tel}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                isValid={touched.tel && !errors.tel}
-                isInvalid={touched.tel && errors.tel}
-              />
-              <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                {errors.tel}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationFormik07">
+                <Form.Label>Telefone</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="tel"
+                  value={values.tel}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isValid={touched.tel && !errors.tel}
+                  isInvalid={touched.tel && errors.tel}
+                />
+                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.tel}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Button type="submit">Criar Conta</Button>
-          </Form>
-        )}
+              <Form.Group as={Col} md="6" controlId="validationFormik08">
+                <Form.Label >CEP</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="cep"
+                  value={values.cep}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isValid={touched.cep && !errors.cep}
+                  isInvalid={touched.cep && errors.cep}
+                />
+                <Button variant="secondary" className="mt-1" onClick={() => cepToCity(values.cep, setFieldValue)}>Consultar CEP</Button>
+                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.cep}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group as={Col} md="6" controlId="validationFormik09">
+                <Form.Label>Cidade</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="city"
+                  value={values.city}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isValid={touched.city && !errors.city}
+                  isInvalid={touched.city && errors.city}
+                />
+                <Form.Control.Feedback>Okay!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors.city}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Button type="submit">Criar Conta</Button>
+            </Form>
+          )}
       </Formik>
     </main>
   );
