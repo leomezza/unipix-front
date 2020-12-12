@@ -43,6 +43,8 @@ const NavigationBar = ({
   logoutUser,
   isAddPixShown,
   showAddPix,
+  listBank,
+  loadBankList,
 }) => {
   const [userInfo, setUserInfo] = useState({});
   const [userModalShow, setUserModalShow] = React.useState(false);
@@ -98,7 +100,12 @@ const NavigationBar = ({
               <Button className="mx-auto" onClick={() => showAddPix(true)}>
                 Nova chave
               </Button>
-              <AddPix show={isAddPixShown} onHide={() => showAddPix(false)} />
+              <AddPix
+                listBank={listBank}
+                loadBankList={loadBankList}
+                show={isAddPixShown}
+                onHide={() => showAddPix(false)}
+              />
               <Button
                 className="ml-auto"
                 onClick={() => setUserModalShow(true)}

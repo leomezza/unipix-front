@@ -40,6 +40,9 @@ const AddPix = (props) => {
 
   let isNewPixSuccessful = false;
 
+  if (props.listBank.length < 1)
+    props.loadBankList().then(console.log(props.listBank));
+
   const handleSubmitMethod = async (formValues, helperMethods) => {
     try {
       await apiServices.createPix(formValues);

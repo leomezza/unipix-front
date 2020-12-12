@@ -20,6 +20,17 @@ function App() {
 
   const [addPixModalShow, setAddPixModalShow] = useState(false);
   const [listPix, setListPix] = useState([]);
+  const [listBank, setListBank] = useState([]);
+
+  const loadBankList = async () => {
+    try {
+      const bank = await apiServices.getAllBanks();
+
+      setListBank(bank);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getListPix = async (type) => {
     try {
@@ -57,6 +68,8 @@ function App() {
         logoutUser={logoutUser}
         isAddPixShown={addPixModalShow}
         showAddPix={setAddPixModalShow}
+        listBank={listBank}
+        loadBankList={loadBankList}
       />
 
       <Switch>
