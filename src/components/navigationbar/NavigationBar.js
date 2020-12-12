@@ -43,13 +43,14 @@ const NavigationBar = ({
   logoutUser,
   isAddPixShown,
   showAddPix,
-  listBank,
-  loadBankList,
+  getListPix,
 }) => {
   const [userInfo, setUserInfo] = useState({});
   const [userModalShow, setUserModalShow] = React.useState(false);
 
   const handleClose = () => setUserModalShow(false);
+  //console.log(listBank);
+  //console.log(loadBankList);
 
   useEffect(() => {
     if (isUserAuth) {
@@ -101,9 +102,8 @@ const NavigationBar = ({
                 Nova chave
               </Button>
               <AddPix
-                listBank={listBank}
-                loadBankList={loadBankList}
                 show={isAddPixShown}
+                getListPix={getListPix}
                 onHide={() => showAddPix(false)}
               />
               <Button
