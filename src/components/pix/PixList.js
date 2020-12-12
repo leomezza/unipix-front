@@ -130,7 +130,7 @@ class PixList extends Component {
                   </OverlayTrigger>
                 </span>
               </CopyToClipboard>
-              <Link to={`/pix/${pix._id}`}>
+              <Link to={`/editpix/${pix._id}`}>
                 <OverlayTrigger key='editar' placement='top' overlay={<Tooltip id={`tooltip-editar`}>Editar</Tooltip>}>
                   <Image className="bottons-nav" src="https://www.freeiconspng.com/uploads/edit-notes-icons-21.png" thumbnail />
                 </OverlayTrigger>

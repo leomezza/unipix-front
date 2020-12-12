@@ -27,7 +27,7 @@ const Login = (props) => {
   },[])
 
   const redirectToLoggedArea = () => {
-    props.history.push('/pix');
+    props.history.push('/pix/1');
   }
 
   const handleSubmitMethod = async (formValues, helperMethods) => {

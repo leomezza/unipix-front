@@ -21,25 +21,25 @@ function App() {
   const [addPixModalShow, setAddPixModalShow] = useState(false);
   const [listPix, setListPix] = useState([]);
 
-  const getListPix = async (type) =>{
+  const getListPix = async (type) => {
     try {
       let pix = [];
 
-      if (type==='1') {
+      if (type === '1') {
         pix = await apiServices.getMyPix();
-      }else if (type==='2') {
+      } else if (type === '2') {
         pix = await apiServices.get3PPix();
       };
       //console.log(pix);
       setListPix(pix);
       //console.log(pix);
-      
+
     } catch (error) {
       console.log(error);
     }
   };
   //console.log(listPix);
-  
+
   const changeUserAuthStatus = (status) => {
     setIsUserAuthenticated(status);
   };
@@ -72,15 +72,15 @@ function App() {
 
         {/* Rotas Privadas */}
         {isUserAuthenticated ? (
-          <Route exact path="/pix/:id" render={(props) => <PixList {...props} getListPix={getListPix} listPix={listPix}/>}  />
+          <Route exact path="/pix/:id" render={(props) => <PixList {...props} getListPix={getListPix} listPix={listPix} />} />
         ) : (
-          <Redirect to="/" />
-        )}
+            <Redirect to="/" />
+          )}
         {isUserAuthenticated ? (
-          <Route exact path="/pix/:id" component={EditPix} />
+          <Route exact path="/editpix/:id" component={EditPix} />
         ) : (
-          <Redirect to="/" />
-        )}
+            <Redirect to="/" />
+          )}
       </Switch>
     </div>
   );
