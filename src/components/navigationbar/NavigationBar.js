@@ -3,7 +3,7 @@ import { Navbar, Nav, Modal, Button, Form, Col, Image } from 'react-bootstrap';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
-import logo from '../../UniPix-logo.png';
+import logo from '../../img/UniPix-logo.png';
 
 import AddPix from '../pix/AddPix';
 import apiServices from '../../services/api.service';
