@@ -15,6 +15,10 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 // import Confirm from 'react-confirm-bootstrap';
 // import { Button, Confirm } from 'semantic-ui-react';
+import btnCopy from '../../img/copy-icon.png';
+import btnEdit from '../../img/edit.png';
+import btnRemove from '../../img/trash.png';
+import btnQRCode from '../../img/qr-icon.jpg';
 
 // import EditPix from './EditPix';
 
@@ -107,7 +111,7 @@ class PixList extends Component {
             <div className='pix-container' key={pix._id}>
               <OverlayTrigger key='banco' placement='bottom' overlay={<Tooltip id={`tooltip-banco`}>{pix.bank.name}</Tooltip>}>
                 {/* <Image variant="secondary" className="bottons-nav" src="https://www.freeiconspng.com/uploads/copy-icon-17.jpg" thumbnail /> */}
-                <img className='img-bank' src={pix.bank.imgBank} rel='banco' />
+                <img className='img-bank' src={pix.bank.imgBank} rel='banco' alt="img"/>
               </OverlayTrigger>
 
               {/* <Link to={`/pix/${pix._id}`}> */}
@@ -127,21 +131,21 @@ class PixList extends Component {
                 }}>
                 <span>
                   <OverlayTrigger key='copiar' placement='top' overlay={<Tooltip id={`tooltip-copiar`}>Copiar</Tooltip>}>
-                    <Image variant="secondary" className="bottons-nav" src="https://www.freeiconspng.com/uploads/copy-icon-17.jpg" thumbnail />
+                    <Image variant="secondary" className="bottons-nav" src={btnCopy} thumbnail alt="btn-copy"/>
                   </OverlayTrigger>
                 </span>
               </CopyToClipboard>
               <Link to={`/editpix/${pix._id}`}>
                 <OverlayTrigger key='editar' placement='top' overlay={<Tooltip id={`tooltip-editar`}>Editar</Tooltip>}>
-                  <Image className="bottons-nav" src="https://www.freeiconspng.com/uploads/edit-notes-icons-21.png" thumbnail />
+                  <Image className="bottons-nav" src={btnEdit} thumbnail alt="btn-edit"/>
                 </OverlayTrigger>
               </Link>
 
               <OverlayTrigger key='excluir' placement='top' overlay={<Tooltip id={`tooltip-excluir`}>Excluir</Tooltip>}>
-                <Image className="bottons-nav" onClick={() => this.submit(pix._id)} src="https://www.freeiconspng.com/uploads/trash-can-icon-29.png" thumbnail />
+                <Image className="bottons-nav" onClick={() => this.submit(pix._id)} src={btnRemove} thumbnail alt="btn-remove"/>
               </OverlayTrigger>
               <OverlayTrigger key='qrcode' placement='top' overlay={<Tooltip id={`tooltip-qrcode`}>Gerar QR Code</Tooltip>}>
-                <Image className="bottons-nav" onClick={() => this.generateQR(pix)} src="https://icon-library.com/images/qr-icon/qr-icon-19.jpg" thumbnail />
+                <Image className="bottons-nav" onClick={() => this.generateQR(pix)} src={btnQRCode} thumbnail alt="btn-qrcode"/>
               </OverlayTrigger>
 
               {this.state.pix.[index] ? <span style={{ color: 'green' }}>Chave Copiada!</span> : null}
