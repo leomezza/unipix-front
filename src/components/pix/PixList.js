@@ -5,7 +5,7 @@ import { QrCodePix } from 'qrcode-pix';
 // import AddPix from './AddPix';
 
 import apiServices from '../../services/api.service';
-import { Image, Modal, Button } from 'react-bootstrap';
+import { Image, Modal, Button, CardDeck, Card, Col, Container, Row } from 'react-bootstrap';
 // import Overlay from 'react-bootstrap/Overlay';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -100,78 +100,107 @@ class PixList extends Component {
 
   render() {
     return (
-      <div>
-        <h1>{this.props.match.params.id ==='1' ? 'Minhas Chaves' : 'Chaves de Terceiros' }</h1>
+      <>
+        <h1 className="text-center">{this.props.match.params.id ==='1' ? 'Minhas Chaves' : 'Chaves de Terceiros' }</h1>
+        <CardDeck>
         {this.props.listPix.map((pix, index) => {
           this.state.copied = {[index]: false };
   
           let pixCopy = JSON.parse(JSON.stringify(this.state.pix))
 
           return (
-            <div className='pix-container' key={pix._id}>
-              <OverlayTrigger key='banco' placement='bottom' overlay={<Tooltip id={`tooltip-banco`}>{pix.bank.name}</Tooltip>}>
-                {/* <Image variant="secondary" className="bottons-nav" src="https://www.freeiconspng.com/uploads/copy-icon-17.jpg" thumbnail /> */}
-                <img className='img-bank' src={pix.bank.imgBank} rel='banco' alt="img"/>
-              </OverlayTrigger>
-
-              {/* <Link to={`/pix/${pix._id}`}> */}
-              <h3>Chave: {pix.key}</h3>
-              {/* </Link> */}
-              {/* <h2>Banco: {pix.bank.name}</h2> */}
-              <h2>Agência: {pix.agency}</h2>
-              <h2>Conta: {pix.account}</h2>
-              <h2>Observação: {pix.note}</h2>
-
-              <CopyToClipboard text={pix.key}
-                onCopy={() => {
-                  pixCopy = {};
-
-                  pixCopy[index] = true
-                  this.setState({ pix: pixCopy })
-                }}>
-                <span>
-                  <OverlayTrigger key='copiar' placement='top' overlay={<Tooltip id={`tooltip-copiar`}>Copiar</Tooltip>}>
-                    <Image variant="secondary" className="bottons-nav" src={btnCopy} thumbnail alt="btn-copy"/>
+          <Col md="4" className="my-2" key={pix._id}>
+            <Card>
+              <Card.Body>
+                <div className='d-flex'>
+                  <Card.Title className='d-inline-block'>Chave: {pix.key}</Card.Title>
+                  <OverlayTrigger key='banco' placement='bottom' overlay={<Tooltip id={`tooltip-banco`}>{pix.bank.name}</Tooltip>}>
+                    {/* <Image variant="secondary" className="bottons-nav" src="https://www.freeiconspng.com/uploads/copy-icon-17.jpg" thumbnail /> */}
+                    <Image className='d-inline-block align-right ml-auto' height="60" src={pix.bank.imgBank} rel='banco' alt="img"/>
                   </OverlayTrigger>
-                </span>
-              </CopyToClipboard>
-              <Link to={`/editpix/${pix._id}`}>
-                <OverlayTrigger key='editar' placement='top' overlay={<Tooltip id={`tooltip-editar`}>Editar</Tooltip>}>
-                  <Image className="bottons-nav" src={btnEdit} thumbnail alt="btn-edit"/>
-                </OverlayTrigger>
-              </Link>
+                </div>
+                {/*<Card.Text>
+                  This is a wider card with supporting text below as a natural lead-in to
+                  additional content. This content is a little bit longer.
+                </Card.Text> */}
+                <Container>
+                  <Row>
+                    <Col className="font-weight-bold">Tipo</Col>
+                    <Col>{pix.pixType ==='CPF' ? 'CPF' : pix.pixType ==='CNPJ' ? 'CNPJ' : pix.pixType ==='EMail' ? 'E-Mail' : pix.pixType ==='Cell' ? 'Celular' : 'Aleatório'}</Col> 
+                  </Row>
+                  <Row>
+                    <Col className="font-weight-bold">{this.props.match.params.id ==='2' ? 'Nome:' : '' }</Col>
+                    <Col>{this.props.match.params.id ==='2' ? `${pix.name3P}` : '' }</Col>
+                  </Row>
+                  <Row>
+                    <Col className="font-weight-bold">Agência:</Col>
+                    <Col>{pix.agency}</Col>
+                  </Row>
+                  <Row>
+                    <Col className="font-weight-bold">Conta:</Col>
+                    <Col>{pix.account}</Col>
+                  </Row>
+                  <Row>
+                    <Col className="font-weight-bold">Observação:</Col>
+                    <Col>{pix.note}</Col>
+                  </Row>
+                </Container> 
+              </Card.Body>
+              <Card.Footer className='d-flex justify-content-between'>
+                {/* <small className="text-muted">Last updated 3 mins ago</small> */}
+                <CopyToClipboard text={pix.key}
+                    onCopy={() => {
+                      pixCopy = {};
 
-              <OverlayTrigger key='excluir' placement='top' overlay={<Tooltip id={`tooltip-excluir`}>Excluir</Tooltip>}>
-                <Image className="bottons-nav" onClick={() => this.submit(pix._id)} src={btnRemove} thumbnail alt="btn-remove"/>
-              </OverlayTrigger>
-              <OverlayTrigger key='qrcode' placement='top' overlay={<Tooltip id={`tooltip-qrcode`}>Gerar QR Code</Tooltip>}>
-                <Image className="bottons-nav" onClick={() => this.generateQR(pix)} src={btnQRCode} thumbnail alt="btn-qrcode"/>
-              </OverlayTrigger>
+                      pixCopy[index] = true
+                      this.setState({ pix: pixCopy })
+                    }}>
+                    <span>
+                      <OverlayTrigger key='copiar' placement='top' overlay={<Tooltip id={`tooltip-copiar`}>Copiar</Tooltip>}>
+                        <Image variant="secondary" className="bottons-nav" src={btnCopy} thumbnail alt="btn-copy"/>
+                      </OverlayTrigger>
+                    </span>
+                  </CopyToClipboard>
+                  <Link to={`/editpix/${pix._id}`}>
+                    <OverlayTrigger key='editar' placement='top' overlay={<Tooltip id={`tooltip-editar`}>Editar</Tooltip>}>
+                      <Image className="bottons-nav" src={btnEdit} thumbnail alt="btn-edit"/>
+                    </OverlayTrigger>
+                  </Link>
 
-              {this.state.pix.[index] ? <span style={{ color: 'green' }}>Chave Copiada!</span> : null}
+                  <OverlayTrigger key='excluir' placement='top' overlay={<Tooltip id={`tooltip-excluir`}>Excluir</Tooltip>}>
+                    <Image className="bottons-nav" onClick={() => this.submit(pix._id)} src={btnRemove} thumbnail alt="btn-remove"/>
+                  </OverlayTrigger>
+                  
+                  <OverlayTrigger key='qrcode' placement='top' overlay={<Tooltip id={`tooltip-qrcode`}>Gerar QR Code</Tooltip>}>
+                    <Image className="bottons-nav" onClick={() => this.generateQR(pix)} src={btnQRCode} thumbnail alt="btn-qrcode"/>
+                  </OverlayTrigger>
 
-              <Modal
-                show={this.state.qrModalShow}
-                onHide={() => this.setState({ qrModalShow: false })}
-                size="sm"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title id="contained-modal-title-vcenter">QR Code do Pix</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Image className="mx-auto d-block" src={this.state.qrPNG} alt="QR Code do Pix" thumbnail />
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button onClick={() => this.setState({ qrModalShow: false })}>Fechar</Button>
-                </Modal.Footer>
-              </Modal>
-
-            </div>
+                  {this.state.pix.[index] ? <span style={{ color: 'green' }}>Chave Copiada!</span> : null}
+                  
+                  <Modal
+                    show={this.state.qrModalShow}
+                    onHide={() => this.setState({ qrModalShow: false })}
+                    size="sm"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title id="contained-modal-title-vcenter">QR Code do Pix</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <Image className="mx-auto d-block" src={this.state.qrPNG} alt="QR Code do Pix" thumbnail />
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button onClick={() => this.setState({ qrModalShow: false })}>Fechar</Button>
+                    </Modal.Footer>
+                  </Modal>
+              </Card.Footer>
+            </Card>
+          </Col>   
           );
         })}
-      </div>
+        </CardDeck>
+      </>
     );
   }
 }
