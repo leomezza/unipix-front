@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav, Modal, Button, Form, Col, Image } from 'react-bootstrap';
+import {
+  Navbar,
+  Nav,
+  Modal,
+  Button,
+  Form,
+  Col,
+  Image,
+  Tooltip,
+  OverlayTrigger,
+} from 'react-bootstrap';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
 import logo from '../../img/UniPix-logo.png';
+import addIcon from '../../img/addIcon.png';
 
 import AddPix from '../pix/AddPix';
 import apiServices from '../../services/api.service';
@@ -81,7 +92,7 @@ const NavigationBar = ({
 
   return (
     <>
-      <Navbar bg="primary" variant="dark">
+      <Navbar bg="primary" variant="dark" expand="md">
         <Navbar.Brand href="/">
           <img
             alt="UniPix Logo"
@@ -92,47 +103,72 @@ const NavigationBar = ({
           />{' '}
           UniPix
         </Navbar.Brand>
+        {isUserAuth ? (
+          <>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="w-100">
+                <Nav.Link href="/pix/1">Minhas chaves</Nav.Link>
+                <Nav.Link href="/pix/2">Outras chaves</Nav.Link>
 
-        <Nav className="w-100">
-          {isUserAuth ? (
-            <>
-              <Nav.Link href="/pix/1">Minhas chaves</Nav.Link>
-              <Nav.Link href="/pix/2">Outras chaves</Nav.Link>
-              <Button className="mx-auto" onClick={() => showAddPix(true)}>
-                Nova chave
-              </Button>
-              <AddPix
-                show={isAddPixShown}
-                getListPix={getListPix}
-                onHide={() => showAddPix(false)}
-              />
-              <Button
-                className="ml-auto"
-                onClick={() => setUserModalShow(true)}
-              >
-                {userInfo.fullName && userInfo.fullName.split(' ')[0]}{' '}
-                <img
-                  alt="Avatar"
-                  src={userInfo.imgUrl}
-                  width="30"
-                  height="30"
-                  className="d-inline-block align-top"
+                <OverlayTrigger
+                  key="newkey"
+                  placement="right"
+                  overlay={<Tooltip id={`tooltip-newkey`}>Nova chave</Tooltip>}
+                >
+                  <Button
+                    className="mr-xs-auto mr-sm-auto mx-md-auto"
+                    onClick={() => showAddPix(true)}
+                  >
+                    <Image
+                      src={addIcon}
+                      width="30"
+                      height="30"
+                      rounded
+                      className="d-inline-block align-top"
+                    />
+                  </Button>
+                </OverlayTrigger>
+
+                <AddPix
+                  show={isAddPixShown}
+                  getListPix={getListPix}
+                  onHide={() => showAddPix(false)}
                 />
-              </Button>
 
-              <Nav.Link className="ml-3" href="/" onClick={logoutUser}>
-                Sair
-              </Nav.Link>
-            </>
-          ) : (
-            <>
-              <Nav.Link className="ml-auto" href="/">
-                Login
-              </Nav.Link>
-              <Nav.Link href="/signup">Cadastrar</Nav.Link>
-            </>
-          )}
-        </Nav>
+                <Button
+                  className="mr-xs-auto mr-sm-auto ml-md-auto"
+                  onClick={() => setUserModalShow(true)}
+                >
+                  {userInfo.fullName && userInfo.fullName.split(' ')[0]}{' '}
+                  <img
+                    alt="Avatar"
+                    src={userInfo.imgUrl}
+                    width="30"
+                    height="30"
+                    className="d-inline-block align-top"
+                  />
+                </Button>
+
+                <Nav.Link className="ml-md-3" href="/" onClick={logoutUser}>
+                  Sair
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </>
+        ) : (
+          <>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="w-100">
+                <Nav.Link className="ml-md-auto" href="/">
+                  Login
+                </Nav.Link>
+                <Nav.Link href="/signup">Cadastrar</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </>
+        )}
       </Navbar>
 
       <Modal

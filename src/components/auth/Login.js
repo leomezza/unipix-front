@@ -3,38 +3,45 @@ import axios from 'axios';
 import * as yup from 'yup';
 
 import { Formik } from 'formik';
-import { Form, Col, Button } from 'react-bootstrap';
+import { Form, Col, Button, Alert } from 'react-bootstrap';
 
 import localStorageUtils from '../../utils/localStorage.utils';
 
 const schema = yup.object({
-  email: yup.string()
-    .email('Formato Inválido').min(5, 'Mínimo de 5 caracteres').max(100, 'Máximo de 100 caracteres').required('Campo Obrigatório'),
-  password: yup.string()
-    .min(5, 'Mínimo de 5 caracteres').max(100, 'Máximo de 100 caracteres').required('Campo Obrigatório'),
+  email: yup
+    .string()
+    .email('Formato Inválido')
+    .min(5, 'Mínimo de 5 caracteres')
+    .max(100, 'Máximo de 100 caracteres')
+    .required('Campo Obrigatório'),
+  password: yup
+    .string()
+    .min(5, 'Mínimo de 5 caracteres')
+    .max(100, 'Máximo de 100 caracteres')
+    .required('Campo Obrigatório'),
 });
 
 const Login = (props) => {
   const initialState = {
     email: '',
     password: '',
-  }
+  };
 
-  useEffect(()=>{
-      if (localStorageUtils.get()){
-        redirectToLoggedArea();
-      }
-  },[])
+  useEffect(() => {
+    if (localStorageUtils.get()) {
+      redirectToLoggedArea();
+    }
+  }, []);
 
   const redirectToLoggedArea = () => {
     props.history.push('/pix/1');
-  }
+  };
 
   const handleSubmitMethod = async (formValues, helperMethods) => {
     try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/auth/public/login`,
-        formValues,
+        formValues
       );
 
       // Guardou o token no localstorage
@@ -44,12 +51,15 @@ const Login = (props) => {
 
       redirectToLoggedArea();
     } catch (error) {
-      if (error.response.data && error.response.data.type === 'Auth-Login-Invalid-Credentials') {
+      if (
+        error.response.data &&
+        error.response.data.type === 'Auth-Login-Invalid-Credentials'
+      ) {
         helperMethods.setFieldError('email', error.response.data.message);
         helperMethods.setFieldError('password', error.response.data.message);
       }
     }
-  }
+  };
 
   return (
     <main>
@@ -81,7 +91,9 @@ const Login = (props) => {
                 isInvalid={touched.email && errors.email}
               />
               <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Col} md="4" controlId="validationFormik03">
@@ -96,11 +108,18 @@ const Login = (props) => {
                 isInvalid={touched.password && errors.password}
               />
               <Form.Control.Feedback>Okay!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                {errors.password}
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Button type="submit">Entrar</Button>
 
+            {props.location.search === '?expired=true' && (
+              <Alert variant="danger" className="m-5 w-25">
+                Sessão expirada, por favor faça novo login
+              </Alert>
+            )}
           </Form>
         )}
       </Formik>
