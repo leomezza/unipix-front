@@ -113,11 +113,11 @@ const NavigationBar = ({
 
                 <OverlayTrigger
                   key="newkey"
-                  placement="right"
+                  placement="bottom"
                   overlay={<Tooltip id={`tooltip-newkey`}>Nova chave</Tooltip>}
                 >
                   <Button
-                    className="mr-xs-auto mr-sm-auto mx-md-auto"
+                    className="mr-auto mx-md-auto"
                     onClick={() => showAddPix(true)}
                   >
                     <Image
@@ -136,19 +136,27 @@ const NavigationBar = ({
                   onHide={() => showAddPix(false)}
                 />
 
-                <Button
-                  className="mr-xs-auto mr-sm-auto ml-md-auto"
-                  onClick={() => setUserModalShow(true)}
+                <OverlayTrigger
+                  key="newkey"
+                  placement="bottom"
+                  overlay={
+                    <Tooltip id={`tooltip-newkey`}>Editar usuário</Tooltip>
+                  }
                 >
-                  {userInfo.fullName && userInfo.fullName.split(' ')[0]}{' '}
-                  <img
-                    alt="Avatar"
-                    src={userInfo.imgUrl}
-                    width="30"
-                    height="30"
-                    className="d-inline-block align-top"
-                  />
-                </Button>
+                  <Button
+                    className="mr-auto mr-md-0 ml-md-auto"
+                    onClick={() => setUserModalShow(true)}
+                  >
+                    {userInfo.fullName && userInfo.fullName.split(' ')[0]}{' '}
+                    <img
+                      alt="Avatar"
+                      src={userInfo.imgUrl}
+                      width="30"
+                      height="30"
+                      className="d-inline-block align-top"
+                    />
+                  </Button>
+                </OverlayTrigger>
 
                 <Nav.Link className="ml-md-3" href="/" onClick={logoutUser}>
                   Sair
