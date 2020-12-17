@@ -27,20 +27,22 @@ const pixSchema = yup.object({
   name3P: yup.string().max(100, 'Máximo de 100 caracteres'),
 });
 
-const AddPix = (props) => {
+const EditPix = (props) => {
   const initialState = {
-    pixType: '',
-    key: '',
-    note: '',
-    bank: '',
-    agency: '',
-    account: '',
-    ownertype: '1',
-    name3P: '',
+    pixType: pix.pixType,
+    key: pix.key,
+    note: pix.note,
+    bank: pix.bank,
+    agency: pix.agency,
+    account: pix.account,
+    ownertype: pix.ownertype,
+    name3P: pix.name3P,
   };
 
   const [listBank, setListBank] = useState([]);
   const [redirectAdress, setRedirectAdress] = useState('');
+  const [pix, setPix] = useState({});
+  const [selectedBank, setSelectedBank] = useState('');
 
   const getListBank = async () => {
     try {
@@ -51,19 +53,33 @@ const AddPix = (props) => {
     }
   };
 
-  useEffect(()=>{
+  const getSinglePix = async () => {
+    try {
+      const { params } = props.match;
+
+      const pixFromAPI = await apiServices.getOnePixById(params.id);
+
+      setPix(pixFromAPI);
+      setSelectedBank(pixFromAPI.bank._id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
     if (listBank.length < 1) getListBank();
-  },[])
+    getSinglePix();
+  }, [])
 
   let isNewPixSuccessful = false;
 
   listBank.length > 0 ? console.log(listBank) : console.log('não carregou');
-  
+
   console.log(props);
 
   const handleSubmitMethod = async (formValues, helperMethods) => {
     try {
-      await apiServices.createPix(formValues);
+      await apiServices.editPixById(_id, formValues);
       isNewPixSuccessful = true;
       props.onHide();
       setRedirectAdress(`/pix/${formValues.ownertype}`);
@@ -76,7 +92,7 @@ const AddPix = (props) => {
     }
   };
 
-  return redirectAdress ? <Redirect to={redirectAdress}/> : (
+  return redirectAdress ? <Redirect to={redirectAdress} /> : (
     <Modal
       {...props}
       size="lg"
@@ -85,8 +101,8 @@ const AddPix = (props) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {isNewPixSuccessful && <h2>Nova chave cadastrada com sucesso.</h2>}
-          Nova Chave
+          {isNewPixSuccessful && <h2>Chave editada com sucesso.</h2>}
+          Editar Chave
         </Modal.Title>
       </Modal.Header>
       {listBank.length > 0 && (
@@ -288,7 +304,7 @@ const AddPix = (props) => {
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="success" className="mr-auto" type="submit">
-                  Criar chave
+                  Editar chave
                 </Button>
                 <Button variant="danger" onClick={props.onHide}>
                   Fechar
@@ -302,4 +318,4 @@ const AddPix = (props) => {
   );
 };
 
-export default AddPix;
+export default EditPix;
