@@ -73,7 +73,7 @@ function App() {
 
         {/* Rotas Privadas */}
         {isUserAuthenticated ? (
-          <Route exact path="/pix/:id" render={(props) => <PixList {...props} getListPix={getListPix} listPix={listPix} />} />
+          <Route exact path="/pix/:id" render={(props) => <PixList {...props} getListPix={getListPix} listPix={listPix} setAddPixModalShow={setAddPixModalShow} />} />
         ) : (
             <Redirect to="/" />
           )}

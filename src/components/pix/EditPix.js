@@ -49,12 +49,12 @@ class EditPix extends Component {
     try {
       event.preventDefault();
 
-      const { key, agency, account, note, _id } = this.state.pix ;
+      const { key, agency, account, note, _id, ownertype } = this.state.pix ;
       const { SelectedBank } = this.state ;
 
       await apiServices.editPixById(_id, { key, agency, account, note, bank: SelectedBank });
 
-      this.props.history.push('/pix');
+      this.props.history.push(`/pix/${ownertype}`);
     } catch (error) {
       console.log(error);
     }
