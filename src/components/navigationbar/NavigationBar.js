@@ -10,6 +10,7 @@ import {
   Tooltip,
   OverlayTrigger,
 } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
@@ -172,7 +173,7 @@ const NavigationBar = ({
                 <Nav.Link className="ml-md-auto" href="/">
                   Login
                 </Nav.Link>
-                <Nav.Link href="/signup">Cadastrar</Nav.Link>
+                <Link to="/signup">Cadastrar</Link>
               </Nav>
             </Navbar.Collapse>
           </>
