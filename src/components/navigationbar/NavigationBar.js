@@ -109,8 +109,12 @@ const NavigationBar = ({
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="w-100">
-                <Nav.Link href="/pix/1">Minhas chaves</Nav.Link>
-                <Nav.Link href="/pix/2">Outras chaves</Nav.Link>
+                <Link to="/pix/1" className="nav-link">
+                  Minhas chaves
+                </Link>
+                <Link to="/pix/2" className="nav-link">
+                  Outras chaves
+                </Link>
 
                 <OverlayTrigger
                   key="newkey"
@@ -159,9 +163,9 @@ const NavigationBar = ({
                   </Button>
                 </OverlayTrigger>
 
-                <Nav.Link className="ml-md-3" href="/" onClick={logoutUser}>
+                <Link className="ml-md-3 nav-link" to="/" onClick={logoutUser}>
                   Sair
-                </Nav.Link>
+                </Link>
               </Nav>
             </Navbar.Collapse>
           </>
@@ -170,10 +174,12 @@ const NavigationBar = ({
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="w-100">
-                <Nav.Link className="ml-md-auto" href="/">
+                <Link className="ml-md-auto nav-link" to="/">
                   Login
-                </Nav.Link>
-                <Link to="/signup">Cadastrar</Link>
+                </Link>
+                <Link to="/signup" className="nav-link">
+                  Cadastrar
+                </Link>
               </Nav>
             </Navbar.Collapse>
           </>
