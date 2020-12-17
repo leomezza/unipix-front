@@ -38,13 +38,14 @@ class PixList extends Component {
     pix: {},
     qrModalShow: false,
     qrPNG: "",
+    userInfo: [],
   };
 
   deletePix = async (chavePix) => {
     try {
       // const { params } = this.props.match;
       if (chavePix) {
-        console.log(chavePix);
+        //console.log(chavePix);
         await apiServices.deletePixById(chavePix);
 
         //this.props.history.push('/pix');
@@ -76,15 +77,15 @@ class PixList extends Component {
     const qrCodePix = QrCodePix({
       version: "01",
       key: pix.key,
-      name: "Leonardo Mezzanotti",
-      city: "São Paulo",
+      name: this.props.match.params.id === "1" ? this.state.userInfo.fullName : pix.name3P,
+      city: this.state.userInfo.city,
       // value: 1.55,
       // guid: '1234567890',
       // message: 'Olha só funcionaaaaa',
       // cep: '04002021',
     });
 
-    console.log(qrCodePix.payload());
+    //console.log(qrCodePix.payload());
     const qrPNG = await qrCodePix.base64();
     this.setState({ qrPNG });
     this.setState({ qrModalShow: true });
@@ -104,8 +105,21 @@ class PixList extends Component {
     this.props.getListPix(params.id);
   };
 
+  getUserInfo = async () => {
+    try {
+      const user = await apiServices.getUserInfo();
+
+      this.setState({userInfo: user});
+      //console.log(userInfo);
+      //console.log(this.state.userInfo);
+    } catch (error) {
+      console.log(error);
+    }
+  };  
+
   componentDidMount() {
     this.getAllPix();
+    this.getUserInfo();
   }
 
   render() {
