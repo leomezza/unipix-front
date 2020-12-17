@@ -57,9 +57,9 @@ const AddPix = (props) => {
 
   let isNewPixSuccessful = false;
 
-  listBank.length > 0 ? console.log(listBank) : console.log('não carregou');
+  //listBank.length > 0 ? console.log(listBank) : console.log('não carregou');
   
-  console.log(props);
+  //console.log(props);
 
   const handleSubmitMethod = async (formValues, helperMethods) => {
     try {
