@@ -79,6 +79,10 @@ const NavigationBar = ({
         delete formValues.password;
 
       delete formValues.confirmPassword;
+      delete formValues.createdAt;
+      delete formValues.updatedAt;
+      delete formValues.__v;
+      delete formValues._id;
 
       await apiServices.editUserInfo(formValues);
       setUserInfo(await apiServices.getUserInfo());
