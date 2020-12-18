@@ -242,7 +242,7 @@ const AddPix = (props) => {
                   >
                     {listBank.map((item, index) =>
                       index === 0 ? (
-                        <option key={index} selected={item._id}>
+                        <option key={index} selected value={item._id}>
                           {item.name}
                         </option>
                       ) : (
