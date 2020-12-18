@@ -109,20 +109,28 @@ class PixList extends Component {
     try {
       const user = await apiServices.getUserInfo();
 
-      this.setState({userInfo: user});
+      this.setState({ userInfo: user });
       //console.log(userInfo);
       //console.log(this.state.userInfo);
     } catch (error) {
       console.log(error);
     }
-  };  
+  };
 
   componentDidMount() {
     this.getAllPix();
     this.getUserInfo();
   }
 
+  // componentDidUpdate() {
+  //   this.getAllPix();
+  //   this.getUserInfo();
+  // }
+
+
   render() {
+    const pixToBeListed = this.props.match.params.id === '1' ? this.props.listPix : this.props.list3PPix;
+
     return (
       <>
         <h1 className="text-center">
@@ -130,214 +138,214 @@ class PixList extends Component {
             ? "Minhas Chaves"
             : "Chaves de Terceiros"}
         </h1>
-          {this.props.listPix.length < 1 ? (
-            <div className="d-flex justify-content-center mt-5" style={{height: "100%"}}>
-              <Button className="d-inline-block align-middle mx-auto" onClick={() => this.props.setAddPixModalShow(true)}>
-                <Image className="d-inline-block align-middle mx-auto"
-                  src={addIcon}
-                  width="120"
-                  height="120"
-                  rounded
-                  //className="d-inline-block align-middle"
-                />
-                <h4>Cadastrar</h4>
-              </Button>
-            </div>
-          ) : (
-        <CardDeck>
-            {this.props.listPix.map((pix, index) => {
-              this.state.copied = { [index]: false };
+        {pixToBeListed.length < 1 ? (
+          <div className="d-flex justify-content-center mt-5" style={{ height: "100%" }}>
+            <Button className="d-inline-block align-middle mx-auto" onClick={() => this.props.setAddPixModalShow(true)}>
+              <Image className="d-inline-block align-middle mx-auto"
+                src={addIcon}
+                width="120"
+                height="120"
+                rounded
+              //className="d-inline-block align-middle"
+              />
+              <h4>Cadastrar</h4>
+            </Button>
+          </div>
+        ) : (
+            <CardDeck>
+              {pixToBeListed.map((pix, index) => {
+                this.state.copied = { [index]: false };
 
-              let pixCopy = JSON.parse(JSON.stringify(this.state.pix));
+                let pixCopy = JSON.parse(JSON.stringify(this.state.pix));
 
-              return (
-                <Col md="4" className="my-2" key={pix._id}>
-                  <Card>
-                    <Card.Body>
-                      <div className="d-flex">
-                        <Card.Title className="d-inline-block">
-                          Chave: {pix.key}
-                        </Card.Title>
-                        <OverlayTrigger
-                          key="banco"
-                          placement="bottom"
-                          overlay={
-                            <Tooltip id={`tooltip-banco`}>
-                              {pix.bank.name}
-                            </Tooltip>
-                          }
-                        >
-                          {/* <Image variant="secondary" className="bottons-nav" src="https://www.freeiconspng.com/uploads/copy-icon-17.jpg" thumbnail /> */}
-                          <Image
-                            className="d-inline-block align-right ml-auto"
-                            height="60"
-                            src={pix.bank.imgBank}
-                            rel="banco"
-                            alt="img"
-                          />
-                        </OverlayTrigger>
-                      </div>
-                      {/*<Card.Text>
+                return (
+                  <Col md="4" className="my-2" key={pix._id}>
+                    <Card>
+                      <Card.Body>
+                        <div className="d-flex">
+                          <Card.Title className="d-inline-block">
+                            Chave: {pix.key}
+                          </Card.Title>
+                          <OverlayTrigger
+                            key="banco"
+                            placement="bottom"
+                            overlay={
+                              <Tooltip id={`tooltip-banco`}>
+                                {pix.bank.name}
+                              </Tooltip>
+                            }
+                          >
+                            {/* <Image variant="secondary" className="bottons-nav" src="https://www.freeiconspng.com/uploads/copy-icon-17.jpg" thumbnail /> */}
+                            <Image
+                              className="d-inline-block align-right ml-auto"
+                              height="60"
+                              src={pix.bank.imgBank}
+                              rel="banco"
+                              alt="img"
+                            />
+                          </OverlayTrigger>
+                        </div>
+                        {/*<Card.Text>
                   This is a wider card with supporting text below as a natural lead-in to
                   additional content. This content is a little bit longer.
                 </Card.Text> */}
-                      <Container>
-                        <Row>
-                          <Col className="font-weight-bold">Tipo</Col>
-                          <Col>
-                            {pix.pixType === "CPF"
-                              ? "CPF"
-                              : pix.pixType === "CNPJ"
-                              ? "CNPJ"
-                              : pix.pixType === "EMail"
-                              ? "E-Mail"
-                              : pix.pixType === "Cell"
-                              ? "Celular"
-                              : "Aleatório"}
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col className="font-weight-bold">
-                            {this.props.match.params.id === "2" ? "Nome:" : ""}
-                          </Col>
-                          <Col>
-                            {this.props.match.params.id === "2"
-                              ? `${pix.name3P}`
-                              : ""}
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col className="font-weight-bold">Agência:</Col>
-                          <Col>{pix.agency}</Col>
-                        </Row>
-                        <Row>
-                          <Col className="font-weight-bold">Conta:</Col>
-                          <Col>{pix.account}</Col>
-                        </Row>
-                        <Row>
-                          <Col className="font-weight-bold">Observação:</Col>
-                          <Col>{pix.note}</Col>
-                        </Row>
-                      </Container>
-                    </Card.Body>
-                    <Card.Footer className="d-flex justify-content-between">
-                      {/* <small className="text-muted">Last updated 3 mins ago</small> */}
-                      <CopyToClipboard
-                        text={pix.key}
-                        onCopy={() => {
-                          pixCopy = {};
+                        <Container>
+                          <Row>
+                            <Col className="font-weight-bold">Tipo</Col>
+                            <Col>
+                              {pix.pixType === "CPF"
+                                ? "CPF"
+                                : pix.pixType === "CNPJ"
+                                  ? "CNPJ"
+                                  : pix.pixType === "EMail"
+                                    ? "E-Mail"
+                                    : pix.pixType === "Cell"
+                                      ? "Celular"
+                                      : "Aleatório"}
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col className="font-weight-bold">
+                              {this.props.match.params.id === "2" ? "Nome:" : ""}
+                            </Col>
+                            <Col>
+                              {this.props.match.params.id === "2"
+                                ? `${pix.name3P}`
+                                : ""}
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col className="font-weight-bold">Agência:</Col>
+                            <Col>{pix.agency}</Col>
+                          </Row>
+                          <Row>
+                            <Col className="font-weight-bold">Conta:</Col>
+                            <Col>{pix.account}</Col>
+                          </Row>
+                          <Row>
+                            <Col className="font-weight-bold">Observação:</Col>
+                            <Col>{pix.note}</Col>
+                          </Row>
+                        </Container>
+                      </Card.Body>
+                      <Card.Footer className="d-flex justify-content-between">
+                        {/* <small className="text-muted">Last updated 3 mins ago</small> */}
+                        <CopyToClipboard
+                          text={pix.key}
+                          onCopy={() => {
+                            pixCopy = {};
 
-                          pixCopy[index] = true;
-                          this.setState({ pix: pixCopy });
-                        }}
-                      >
-                        <span>
+                            pixCopy[index] = true;
+                            this.setState({ pix: pixCopy });
+                          }}
+                        >
+                          <span>
+                            <OverlayTrigger
+                              key="copiar"
+                              placement="top"
+                              overlay={
+                                <Tooltip id={`tooltip-copiar`}>Copiar</Tooltip>
+                              }
+                            >
+                              <Image
+                                variant="secondary"
+                                className="bottons-nav"
+                                src={btnCopy}
+                                thumbnail
+                                alt="btn-copy"
+                              />
+                            </OverlayTrigger>
+                          </span>
+                        </CopyToClipboard>
+                        <Link to={`/editpix/${pix._id}`}>
                           <OverlayTrigger
-                            key="copiar"
+                            key="editar"
                             placement="top"
                             overlay={
-                              <Tooltip id={`tooltip-copiar`}>Copiar</Tooltip>
+                              <Tooltip id={`tooltip-editar`}>Editar</Tooltip>
                             }
                           >
                             <Image
-                              variant="secondary"
                               className="bottons-nav"
-                              src={btnCopy}
+                              src={btnEdit}
                               thumbnail
-                              alt="btn-copy"
+                              alt="btn-edit"
                             />
                           </OverlayTrigger>
-                        </span>
-                      </CopyToClipboard>
-                      <Link to={`/editpix/${pix._id}`}>
+                        </Link>
+
                         <OverlayTrigger
-                          key="editar"
+                          key="excluir"
                           placement="top"
                           overlay={
-                            <Tooltip id={`tooltip-editar`}>Editar</Tooltip>
+                            <Tooltip id={`tooltip-excluir`}>Excluir</Tooltip>
                           }
                         >
                           <Image
                             className="bottons-nav"
-                            src={btnEdit}
+                            onClick={() => this.submit(pix._id)}
+                            src={btnRemove}
                             thumbnail
-                            alt="btn-edit"
+                            alt="btn-remove"
                           />
                         </OverlayTrigger>
-                      </Link>
 
-                      <OverlayTrigger
-                        key="excluir"
-                        placement="top"
-                        overlay={
-                          <Tooltip id={`tooltip-excluir`}>Excluir</Tooltip>
-                        }
-                      >
-                        <Image
-                          className="bottons-nav"
-                          onClick={() => this.submit(pix._id)}
-                          src={btnRemove}
-                          thumbnail
-                          alt="btn-remove"
-                        />
-                      </OverlayTrigger>
-
-                      <OverlayTrigger
-                        key="qrcode"
-                        placement="top"
-                        overlay={
-                          <Tooltip id={`tooltip-qrcode`}>Gerar QR Code</Tooltip>
-                        }
-                      >
-                        <Image
-                          className="bottons-nav"
-                          onClick={() => this.generateQR(pix)}
-                          src={btnQRCode}
-                          thumbnail
-                          alt="btn-qrcode"
-                        />
-                      </OverlayTrigger>
-
-                      {this.state.pix[index] ? (
-                        <span style={{ color: "green" }}>Chave Copiada!</span>
-                      ) : null}
-
-                      <Modal
-                        show={this.state.qrModalShow}
-                        onHide={() => this.setState({ qrModalShow: false })}
-                        size="sm"
-                        aria-labelledby="contained-modal-title-vcenter"
-                        centered
-                      >
-                        <Modal.Header closeButton>
-                          <Modal.Title id="contained-modal-title-vcenter">
-                            QR Code do Pix
-                          </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
+                        <OverlayTrigger
+                          key="qrcode"
+                          placement="top"
+                          overlay={
+                            <Tooltip id={`tooltip-qrcode`}>Gerar QR Code</Tooltip>
+                          }
+                        >
                           <Image
-                            className="mx-auto d-block"
-                            src={this.state.qrPNG}
-                            alt="QR Code do Pix"
+                            className="bottons-nav"
+                            onClick={() => this.generateQR(pix)}
+                            src={btnQRCode}
                             thumbnail
+                            alt="btn-qrcode"
                           />
-                        </Modal.Body>
-                        <Modal.Footer>
-                          <Button
-                            onClick={() =>
-                              this.setState({ qrModalShow: false })
-                            }
-                          >
-                            Fechar
+                        </OverlayTrigger>
+
+                        {this.state.pix[index] ? (
+                          <span style={{ color: "green" }}>Chave Copiada!</span>
+                        ) : null}
+
+                        <Modal
+                          show={this.state.qrModalShow}
+                          onHide={() => this.setState({ qrModalShow: false })}
+                          size="sm"
+                          aria-labelledby="contained-modal-title-vcenter"
+                          centered
+                        >
+                          <Modal.Header closeButton>
+                            <Modal.Title id="contained-modal-title-vcenter">
+                              QR Code do Pix
+                          </Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            <Image
+                              className="mx-auto d-block"
+                              src={this.state.qrPNG}
+                              alt="QR Code do Pix"
+                              thumbnail
+                            />
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button
+                              onClick={() =>
+                                this.setState({ qrModalShow: false })
+                              }
+                            >
+                              Fechar
                           </Button>
-                        </Modal.Footer>
-                      </Modal>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              );
-            })}
-        </CardDeck>
+                          </Modal.Footer>
+                        </Modal>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                );
+              })}
+            </CardDeck>
           )}
       </>
     );

@@ -113,10 +113,18 @@ const NavigationBar = ({
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="w-100">
-                <Link to="/pix/1" className="nav-link" onClick={getListPix(1)}>
+                <Link
+                  to="/pix/1"
+                  className="nav-link"
+                  // onClick={() => getListPix(1)}
+                >
                   Minhas chaves
                 </Link>
-                <Link to="/pix/2" className="nav-link" onClick={getListPix(2)}>
+                <Link
+                  to="/pix/2"
+                  className="nav-link"
+                  // onClick={() => getListPix(2)}
+                >
                   Outras chaves
                 </Link>
 

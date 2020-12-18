@@ -20,20 +20,21 @@ function App() {
 
   const [addPixModalShow, setAddPixModalShow] = useState(false);
   const [listPix, setListPix] = useState([]);
+  const [list3PPix, setList3PPix] = useState([]);
 
-  const getListPix = async (type) => {
+  const getListPix = async () => {
     try {
-      let pix = [];
+      // let pix = [];
 
-      if (type === '1') {
-        pix = await apiServices.getMyPix();
-      } else if (type === '2') {
-        pix = await apiServices.get3PPix();
-      };
+      // if (type === '1') {
+      const userPix = await apiServices.getMyPix();
+      // } else if (type === '2') {
+      const otherPix = await apiServices.get3PPix();
+      // };
       //console.log(pix);
-      setListPix(pix);
+      setListPix(userPix);
+      setList3PPix(otherPix);
       //console.log(pix);
-
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +53,7 @@ function App() {
 
   return (
     <div className="App">
-      <NavigationBar 
+      <NavigationBar
         isUserAuth={isUserAuthenticated}
         logoutUser={logoutUser}
         isAddPixShown={addPixModalShow}
@@ -73,15 +74,27 @@ function App() {
 
         {/* Rotas Privadas */}
         {isUserAuthenticated ? (
-          <Route exact path="/pix/:id" render={(props) => <PixList {...props} getListPix={getListPix} listPix={listPix} setAddPixModalShow={setAddPixModalShow} />} />
+          <Route
+            exact
+            path="/pix/:id"
+            render={(props) => (
+              <PixList
+                {...props}
+                getListPix={getListPix}
+                listPix={listPix}
+                list3PPix={list3PPix}
+                setAddPixModalShow={setAddPixModalShow}
+              />
+            )}
+          />
         ) : (
-            <Redirect to="/" />
-          )}
+          <Redirect to="/" />
+        )}
         {isUserAuthenticated ? (
           <Route exact path="/editpix/:id" component={EditPix} />
         ) : (
-            <Redirect to="/" />
-          )}
+          <Redirect to="/" />
+        )}
       </Switch>
     </div>
   );
