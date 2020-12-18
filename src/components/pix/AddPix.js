@@ -45,20 +45,24 @@ const AddPix = (props) => {
   const getListBank = async () => {
     try {
       const bank = await apiServices.getAllBanks();
+      // console.log(bank[0]._id);
+      // initialState.bank = bank[0]._id;
+
+      // console.log(initialState);
       setListBank(bank);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     if (listBank.length < 1) getListBank();
-  },[])
+  }, [listBank]);
 
   let isNewPixSuccessful = false;
 
   //listBank.length > 0 ? console.log(listBank) : console.log('não carregou');
-  
+
   //console.log(props);
 
   const handleSubmitMethod = async (formValues, helperMethods) => {
@@ -68,7 +72,6 @@ const AddPix = (props) => {
       props.onHide();
       setRedirectAdress(`/pix/${formValues.ownertype}`);
       props.getListPix(formValues.ownertype);
-
     } catch (error) {
       if (error.response.data && error.response.data.type === 'Auth-Signup') {
         helperMethods.setFieldError('email', error.response.data.message);
@@ -76,7 +79,9 @@ const AddPix = (props) => {
     }
   };
 
-  return redirectAdress ? <Redirect to={redirectAdress}/> : (
+  return redirectAdress ? (
+    <Redirect to={redirectAdress} />
+  ) : (
     <Modal
       {...props}
       size="lg"
@@ -228,10 +233,24 @@ const AddPix = (props) => {
 
                 <Form.Group as={Col} md="6" controlId="validationFormik04">
                   <Form.Label>Banco</Form.Label>
-                  <Form.Control as="select" custom onChange={handleChange} onBlur={handleBlur} name="bank">
-                    {listBank.map((item, index) => (
-                      <option key={index} value={item._id}>{item.name}</option>
-                    ))}
+                  <Form.Control
+                    as="select"
+                    custom
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    name="bank"
+                  >
+                    {listBank.map((item, index) =>
+                      index === 0 ? (
+                        <option key={index} selected={item._id}>
+                          {item.name}
+                        </option>
+                      ) : (
+                        <option key={index} value={item._id}>
+                          {item.name}
+                        </option>
+                      )
+                    )}
                   </Form.Control>
                 </Form.Group>
 
