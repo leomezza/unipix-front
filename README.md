@@ -4,6 +4,10 @@
 
 This is our third coding project as part of the IronHack bootcamp - SAO-29-WD-PT. It's a digital wallet called **UniPix** and it allows the user to store his/her Pix keys (new Brazilian payment method) and also from others (family, friends, etc). Additionally it automatically generates QR codes that ease the sharing process for the user to receive or perform money transfers. The UX is created with mobile first in mind.
 
+# UniPix Back-End
+
+https://github.com/leomezza/unipix-back
+
 ## Summary
 
 - [How it works](#how-it-works)
