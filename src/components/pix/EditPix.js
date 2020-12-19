@@ -72,48 +72,6 @@ class EditPix extends Component {
   render() {
     //console.log(this.state.bank);
     return (
-      // <div  className='pix-container'>
-      //   <hr />
-      //   <h3>Edição de Chave</h3>
-      //   <form onSubmit={this.handleFormSubmit}>
-      //     <label>Chave:</label>
-      //     <input
-      //       type="text"
-      //       name="key"
-      //       value={this.state.pix.key}
-      //       onChange={(e) => this.handleChange(e)} disabled="disabled"
-      //     />
-      //     <br />
-      //     <label>Banco:</label>
-      //     <select value={this.state.SelectedBank} onChange={this.handleSelectedBank}>
-      //     {this.state.bank.map((item, index) => (
-      //     	<option key={index} value={item._id}>{item.name}</option>
-      //     ))}
-      //     </select>            
-      //     <br />     
-      //     <label>Agencia:</label>
-      //     <textarea
-      //       name="agency"
-      //       value={this.state.pix.agency}
-      //       onChange={(e) => this.handleChange(e)}
-      //     />
-      //     <br />
-      //     <label>Conta:</label>
-      //     <textarea
-      //       name="account"
-      //       value={this.state.pix.account}
-      //       onChange={(e) => this.handleChange(e)}
-      //     />
-      //     <br />
-      //     <label>Observação:</label>
-      //     <textarea
-      //       name="note"
-      //       value={this.state.pix.note}
-      //       onChange={(e) => this.handleChange(e)}
-      //     />
-      //     <input type="submit" value="Salvar" />
-      //   </form>
-      // </div>
       <Container>
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
@@ -130,13 +88,6 @@ class EditPix extends Component {
                 Chave
               </Form.Label>
               <Form.Control plaintext readOnly defaultValue={this.state.pix.key} />
-            </Form.Group>
-
-            <Form.Group  controlId="formPlaintextPassword">
-              <Form.Label >
-                Agência
-              </Form.Label>
-                <Form.Control type="text" name="agency" value={this.state.pix.agency} onChange={(e) => this.handleChange(e)}/>
             </Form.Group>
             {this.state.pix.ownertype ==='2' && (
               <Form.Group controlId="formPlaintextPassword">
@@ -156,6 +107,13 @@ class EditPix extends Component {
               </Form.Control>
             </Form.Group>
 
+            <Form.Group  controlId="formPlaintextPassword">
+              <Form.Label >
+                Agência
+              </Form.Label>
+                <Form.Control type="text" name="agency" value={this.state.pix.agency} onChange={(e) => this.handleChange(e)}/>
+            </Form.Group>
+            
             <Form.Group controlId="formPlaintextPassword">
               <Form.Label c>
               Conta
