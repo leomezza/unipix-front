@@ -56,6 +56,7 @@ const NavigationBar = ({
   isAddPixShown,
   showAddPix,
   getListPix,
+  hideAddPix,
 }) => {
   const [userInfo, setUserInfo] = useState({});
   const [userModalShow, setUserModalShow] = React.useState(false);
@@ -151,13 +152,14 @@ const NavigationBar = ({
                   show={isAddPixShown}
                   getListPix={getListPix}
                   onHide={() => showAddPix(false)}
+                  hideAddPix={hideAddPix}
                 />
 
                 <OverlayTrigger
-                  key="newkey"
+                  key="edituser"
                   placement="bottom"
                   overlay={
-                    <Tooltip id={`tooltip-newkey`}>Editar usuário</Tooltip>
+                    <Tooltip id={`tooltip-edituser`}>Editar usuário</Tooltip>
                   }
                 >
                   <Button

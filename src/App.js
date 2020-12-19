@@ -51,6 +51,10 @@ function App() {
     changeUserAuthStatus(false);
   };
 
+  const hideAddPix = () => {
+    setAddPixModalShow(false);
+  };
+
   return (
     <div className="App">
       <NavigationBar
@@ -59,6 +63,7 @@ function App() {
         isAddPixShown={addPixModalShow}
         showAddPix={setAddPixModalShow}
         getListPix={getListPix}
+        hideAddPix={hideAddPix}
       />
 
       <Switch>

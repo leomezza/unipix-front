@@ -69,7 +69,7 @@ const AddPix = (props) => {
     try {
       await apiServices.createPix(formValues);
       isNewPixSuccessful = true;
-      props.onHide();
+      props.hideAddPix();
       setRedirectAdress(`/pix/${formValues.ownertype}`);
       props.getListPix(formValues.ownertype);
     } catch (error) {
@@ -242,7 +242,7 @@ const AddPix = (props) => {
                   >
                     {listBank.map((item, index) =>
                       index === 0 ? (
-                        <option key={index} selected value={item._id}>
+                        <option key={index} defaultValue={item._id}>
                           {item.name}
                         </option>
                       ) : (
@@ -309,7 +309,7 @@ const AddPix = (props) => {
                 <Button variant="success" className="mr-auto" type="submit">
                   Criar chave
                 </Button>
-                <Button variant="danger" onClick={props.onHide}>
+                <Button variant="danger" onClick={() => props.hideAddPix()}>
                   Fechar
                 </Button>
               </Modal.Footer>

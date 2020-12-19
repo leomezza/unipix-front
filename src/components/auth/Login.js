@@ -63,7 +63,7 @@ const Login = (props) => {
 
   return (
     <main>
-      <h1>Entre com suas credenciais para gerenciar suas chaves Pix</h1>
+      <h3>Entre com suas credenciais para gerenciar suas chaves Pix</h3>
 
       <Formik
         initialValues={initialState}
@@ -113,7 +113,7 @@ const Login = (props) => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Button type="submit">Entrar</Button>
+            <Button className="m-3" type="submit">Entrar</Button>
 
             {props.location.search === '?expired=true' && (
               <Alert variant="danger" className="m-5 w-25">

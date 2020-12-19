@@ -133,11 +133,11 @@ class PixList extends Component {
 
     return (
       <>
-        <h1 className="text-center">
+        <h3 className="text-center">
           {this.props.match.params.id === "1"
             ? "Minhas Chaves"
             : "Chaves de Terceiros"}
-        </h1>
+        </h3>
         {pixToBeListed.length < 1 ? (
           <div className="d-flex justify-content-center mt-5" style={{ height: "100%" }}>
             <Button className="d-inline-block align-middle mx-auto" onClick={() => this.props.setAddPixModalShow(true)}>
